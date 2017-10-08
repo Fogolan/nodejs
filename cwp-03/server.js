@@ -11,7 +11,11 @@ let server = net.createServer(function (client) {
     client.on('error', errorFromClient);
 
     function initStringFromClient(data, error) {
+        if(client.id != undefined) {
+            return;
+        }
         if (data.toString() == constants.filesConnectString) {
+            client.id = uuidv4();
             client.write(constants.serverResOKstatus);
         } else {
             client.write(constants.serverResErrstatus);
