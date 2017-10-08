@@ -3,6 +3,7 @@ const fs = require('fs');
 const uuidv4 = require('uuid/v4');
 
 const constants = require('./modules/constants_module');
+const serverHelper = require('./server_helper');
 
 let clients = [];
 
@@ -14,12 +15,8 @@ let server = net.createServer(function (client) {
         if(client.id != undefined) {
             return;
         }
-        if (data.toString() == constants.filesConnectString) {
-            client.id = uuidv4();
-            client.write(constants.serverResOKstatus);
-        } else {
-            client.write(constants.serverResErrstatus);
-        }
+        client.write(serverHelper.checkInitMessage(data, client));
+        console.log(client.id.toString());
     }
 
     function errorFromClient(error) {
