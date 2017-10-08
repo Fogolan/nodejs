@@ -4,17 +4,9 @@ const path = require('path');
 const constants = require('./modules/constants_module')
 
 class Client {
-    constructor(argv) {
-        this.dirPathes = this.getDirectories(argv);
-        this.getAllFilesNames(this.dirPathes);
-    }
 
-    getDirectories(argv) {
-        var dirPathes = [];
-        for (let i = 2; i < argv.length; i++) { 
-            dirPathes.push(argv[i]);
-        }
-        return dirPathes;
+    constructor(argv) {
+        this.argv = argv;
     }
 
     response(data, client) {
@@ -24,26 +16,32 @@ class Client {
         }
         if(data === constants.serverResOKstatus) {
             console.log(data);
+            this.getDirectories(this.argv)
             this.sendFile(client);
         }
     }
 
     getAllFilesNames(dirPath) {
-        this.filePathes = [];
+        let filePathes = [];
         fs.readdirSync(dirPath).forEach(function(fileName) {
-    
-            let filePath = path.normalize(dirVal + '\\' + fileName);
+            let filePath = path.normalize(dirPath + '\\' + fileName);
             if (fs.statSync(filePath).isFile()) {
-                this.filePathes.push(filePath);
+                filePathes.push(filePath);
             }
             else {
-                readAllFilesNames(filePath);
+                this.getAllFilesNames(filePath);
             }
         })
     }
 
+    getDirectories(directories) {
+        directories.forEach((element) => {
+            this.getAllFilesNames(element);
+        });
+    }
+
     sendFile(client) {
-        if (this.filePathes.length != 0) {
+        if (this.filePathes && this.filePathes.length !== 0) {
     
             let tmpFileName = this.filePathes.shift();
     

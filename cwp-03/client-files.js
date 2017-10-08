@@ -4,7 +4,7 @@ const fs = require('fs');
 const constants = require('./modules/constants_module');
 const Client = require('./client');
 
-let clientManager = new Client(process.argv);
+let clientManager = new Client(process.argv.slice(2));
 let client = new net.Socket();
 
 client.setEncoding(constants.encoding);
