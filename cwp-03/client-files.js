@@ -1,7 +1,10 @@
 const net = require('net');
 const fs = require('fs');
-const constants = require('./modules/constants_module');
 
+const constants = require('./modules/constants_module');
+const Client = require('./client');
+
+let clientManager = new Client(process.argv);
 let client = new net.Socket();
 
 client.setEncoding(constants.encoding);
@@ -11,18 +14,10 @@ client.connect(constants.connectionSocket, function() {
 })
 
 client.on('data', function(data) {
-    console.log(data.toString());
+    clientManager.response(data, client);
 })
 
 client.on('error', function(data) {
     console.log(data.toString());
 })
-
-function readCMDParams(argv) {
-    var params = [];
-    for (i = 2; i < argv.length; i++) { 
-        params.push(argv[i]);
-    }
-    return params;
-}
 
