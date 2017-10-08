@@ -25,7 +25,6 @@ class Server {
             this.clients.push(client);
             return true;
         }
-        client.destroy();
         return false;
     }
 }
