@@ -8,6 +8,14 @@ class Server {
         this.maxClients = maxNumberOfClients;
     }
 
+    request(data, client) {
+        if(client.id != undefined) {
+            return;
+        }
+        let result = this.checkInitMessage(data, client);
+        return result;
+    }
+
     checkInitMessage(data, client) {
         if (data.toString() == constants.filesConnectString) {
             let result = this.tryConnectClient(client);

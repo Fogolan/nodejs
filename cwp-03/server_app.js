@@ -14,10 +14,7 @@ let server = net.createServer(function (client) {
     client.on('error', errorFromClient);
 
     function initStringFromClient(data, error) {
-        if(client.id != undefined) {
-            return;
-        }
-        client.write(clientManager.checkInitMessage(data, client));
+        client.write(clientManager.request(data, client));
     }
 
     function errorFromClient(error) {
