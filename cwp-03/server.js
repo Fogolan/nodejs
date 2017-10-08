@@ -1,19 +1,25 @@
 const net = require('net');
 const fs = require('fs');
-const constants = require('./constants');
+const uuidv4 = require('uuid/v4');
+
+const constants = require('./modules/constants_module');
 
 let clients = [];
 
 let server = net.createServer(function (client) {
-    client.on('data', readFromClient);
+    client.on('data', initStringFromClient);
+    client.on('error', errorFromClient);
 
-    function readFromClient(data, error) {
-        console.log(data.toString());
+    function initStringFromClient(data, error) {
         if (data.toString() == constants.filesConnectString) {
             client.write(constants.serverResOKstatus);
         } else {
             client.write(constants.serverResErrstatus);
         }
+    }
+
+    function errorFromClient(error) {
+        console.log(error);
     }
 });
 

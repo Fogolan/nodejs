@@ -1,6 +1,6 @@
 const net = require('net');
 const fs = require('fs');
-const constants = require('./constants');
+const constants = require('./modules/constants_module');
 
 let client = new net.Socket();
 
@@ -17,3 +17,12 @@ client.on('data', function(data) {
 client.on('error', function(data) {
     console.log(data.toString());
 })
+
+function readCMDParams(argv) {
+    var params = [];
+    for (i = 2; i < argv.length; i++) { 
+        params.push(argv[i]);
+    }
+    return params;
+}
+
