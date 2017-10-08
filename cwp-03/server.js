@@ -1,29 +1,33 @@
-const net = require('net');
-const fs = require('fs');
 const uuidv4 = require('uuid/v4');
 
 const constants = require('./modules/constants_module');
-const serverHelper = require('./server_helper');
 
-let clients = [];
+class Server {
+    constructor(maxNumberOfClients) {
+        this.clients = [];
+        this.maxClients = maxNumberOfClients;
+    }
 
-let server = net.createServer(function (client) {
-    client.on('data', initStringFromClient);
-    client.on('error', errorFromClient);
-
-    function initStringFromClient(data, error) {
-        if(client.id != undefined) {
-            return;
+    checkInitMessage(data, client) {
+        if (data.toString() == constants.filesConnectString) {
+            let result = this.tryConnectClient(client);
+            if(result === true) {
+                return constants.serverResOKstatus;
+            }
+        } else {
+            return constants.serverResErrstatus;
         }
-        client.write(serverHelper.checkInitMessage(data, client));
-        console.log(client.id.toString());
     }
 
-    function errorFromClient(error) {
-        console.log(error);
+    tryConnectClient(client) {
+        if(this.clients.length < this.maxClients) {
+            client.id = uuidv4();
+            this.clients.push(client);
+            return true;
+        }
+        client.destroy();
+        return false;
     }
-});
+}
 
-server.listen(constants.port, constants.host, function () {
-    console.log('server started');
-});
+module.exports = Server;
