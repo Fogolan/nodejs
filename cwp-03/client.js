@@ -1,16 +1,20 @@
+const fs = require('fs');
+const path = require('path');
+
 const constants = require('./modules/constants_module')
 
 class Client {
     constructor(argv) {
-        this.filePathes = this.readCMDParams(argv);
+        this.dirPathes = this.getDirectories(argv);
+        this.getAllFilesNames(this.dirPathes);
     }
 
-    readCMDParams(argv) {
-        var filePathes = [];
+    getDirectories(argv) {
+        var dirPathes = [];
         for (let i = 2; i < argv.length; i++) { 
-            filePathes.push(argv[i]);
+            dirPathes.push(argv[i]);
         }
-        return filePathes;
+        return dirPathes;
     }
 
     response(data, client) {
@@ -20,6 +24,38 @@ class Client {
         }
         if(data === constants.serverResOKstatus) {
             console.log(data);
+            this.sendFile(client);
+        }
+    }
+
+    getAllFilesNames(dirPath) {
+        this.filePathes = [];
+        fs.readdirSync(dirPath).forEach(function(fileName) {
+    
+            let filePath = path.normalize(dirVal + '\\' + fileName);
+            if (fs.statSync(filePath).isFile()) {
+                this.filePathes.push(filePath);
+            }
+            else {
+                readAllFilesNames(filePath);
+            }
+        })
+    }
+
+    sendFile(client) {
+        if (this.filePathes.length != 0) {
+    
+            let tmpFileName = this.filePathes.shift();
+    
+            fs.readFile(tmpFileName, function(err, data) {
+    
+                client.write(data);
+                client.write(bufferSep + path.basename(tmpFileName));
+                client.write(bufferSep + endSendingFile);
+    
+            });
+        } else {
+            client.end();
         }
     }
 
