@@ -23,4 +23,5 @@ module.exports = {
     sendNextFile: sendNextFile,
     error: error,
     endFileTag: endFileTag,
+    fileSeparator: fileSeparator,
 }
