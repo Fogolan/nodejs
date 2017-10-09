@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const JSON = require ('serialize-json');
 
 const constants = require('./modules/constants_module')
+const FileMessage = require('./modules/fileMessage');
 
 class Client {
 
@@ -44,13 +46,9 @@ class Client {
         if (this.filePathes && this.filePathes.length !== 0) {
     
             let tmpFileName = this.filePathes.shift();
-    
             fs.readFile(tmpFileName, function(err, data) {
-    
-                client.write(data);
-                client.write(constants.fileSeparator + path.basename(tmpFileName));
-                client.write(constants.fileSeparator + constants.endFileTag);
-    
+                let fileMessage = new FileMessage(path.basename(tmpFileName), data);
+                client.write(JSON.encode(fileMessage));
             });
         } else {
             client.end();
