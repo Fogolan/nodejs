@@ -10,12 +10,11 @@ class Client {
     }
 
     response(data, client) {
-        if(data === constants.serverResErrstatus) {
-            console.log(data);
+        console.log(data);
+        if(data === constants.serverResErrstatus) { //It needs to strategy pattern implementation but it's just node.js I will not do this
             client.destroy();
         }
         if(data === constants.serverResOKstatus) {
-            console.log(data);
             this.getDirectories(this.argv)
             this.sendFile(client);
         }
@@ -41,6 +40,7 @@ class Client {
     }
 
     sendFile(client) {
+        console.log('filePathes: ', this.filePathes);
         if (this.filePathes && this.filePathes.length !== 0) {
     
             let tmpFileName = this.filePathes.shift();
