@@ -48,8 +48,8 @@ class Client {
             fs.readFile(tmpFileName, function(err, data) {
     
                 client.write(data);
-                client.write(bufferSep + path.basename(tmpFileName));
-                client.write(bufferSep + endSendingFile);
+                client.write(constants.fileSeparator + path.basename(tmpFileName));
+                client.write(constants.fileSeparator + constants.endFileTag);
     
             });
         } else {
