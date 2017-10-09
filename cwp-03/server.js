@@ -12,8 +12,9 @@ class Server {
     request(data, client) {
         console.log('from client: ', data.toString());
         if(client.id != undefined) {
-            console.log((this.ClientDialogFILES(data)) ? constants.sendNextFile : constants.error);
-            return (this.ClientDialogFILES(data)) ? constants.sendNextFile : constants.error;
+            let result = (this.ClientDialogFILES(data, client)) ? constants.sendNextFile : constants.error;
+            console.log(result);
+            return result;
         }
         let result = this.checkInitMessage(data, client);
         return result;
@@ -21,9 +22,9 @@ class Server {
 
     ClientDialogFILES(data, client) {
         let bufferChank = Buffer.from(data);
-        this.filesChanks[client.id].push(bufferChank);
+        this.filesChanks[client.id] = bufferChank;
 
-        if (data.toString().endsWith(endSendingFile)) {
+        if (data.toString().endsWith(constants.endFileTag)) {
             createFileFromBinData(client.id);
             return true;
         }
