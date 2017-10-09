@@ -24,4 +24,5 @@ module.exports = {
     error: error,
     endFileTag: endFileTag,
     fileSeparator: fileSeparator,
+    encoding, encoding
 }
