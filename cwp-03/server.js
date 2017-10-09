@@ -1,4 +1,7 @@
+const fs = require('fs');
+const path = require('path');
 const uuidv4 = require('uuid/v4');
+const JSON = require ('serialize-json');
 
 const constants = require('./modules/constants_module');
 
@@ -20,14 +23,27 @@ class Server {
         return result;
     }
 
-    ClientDialogFILES(data, client) {
-        let bufferChank = Buffer.from(data);
-        this.filesChanks[client.id] = bufferChank;
+    createFileFromBinData(id, fileName) {
+        let fileData = Buffer.concat(this.filesChanks[id]);
+        fs.writeFile(__dirname + '/dist/' + fileName, 'utf8', fileData, function (err) {
+            if (err)
+            console.error(err);
+            }
+        );
+        this.filesChanks[id]=[];
+    }
 
-        if (data.toString().endsWith(constants.endFileTag)) {
-            createFileFromBinData(client.id);
-            return true;
+    ClientDialogFILES(data, client) {
+        let fileObject = JSON.decode(data);
+        let bufferChank = Buffer.from(fileObject.fileBuffer);
+        if(!this.filesChanks[client.id]) {
+            this.filesChanks[client.id] = [];            
         }
+
+        this.filesChanks[client.id].push(bufferChank);        
+        this.createFileFromBinData(client.id, fileObject.fileName);
+        
+        return false;
     }
 
     checkInitMessage(data, client) {
