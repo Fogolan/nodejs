@@ -6,6 +6,7 @@ const constants = require('./modules/constants_module')
 class Client {
 
     constructor(argv) {
+        this.filePathes = [];
         this.argv = argv;
     }
 
@@ -15,17 +16,17 @@ class Client {
             client.destroy();
         }
         if(data === constants.serverResOKstatus) {
-            this.getDirectories(this.argv)
+            console.log('I am starting to send files');
+            this.getDirectories(this.argv);
             this.sendFile(client);
         }
     }
 
-    getAllFilesNames(dirPath) {
-        let filePathes = [];
+    getAllFilesNames(dirPath, fileNamesArray) { //I don't know why but I need to get this.filePhathes from function parameters because it can't see it other ways
         fs.readdirSync(dirPath).forEach(function(fileName) {
             let filePath = path.normalize(dirPath + '\\' + fileName);
             if (fs.statSync(filePath).isFile()) {
-                filePathes.push(filePath);
+                fileNamesArray.push(filePath);
             }
             else {
                 this.getAllFilesNames(filePath);
@@ -35,12 +36,11 @@ class Client {
 
     getDirectories(directories) {
         directories.forEach((element) => {
-            this.getAllFilesNames(element);
+            this.getAllFilesNames(element, this.filePathes);
         });
     }
 
     sendFile(client) {
-        console.log('filePathes: ', this.filePathes);
         if (this.filePathes && this.filePathes.length !== 0) {
     
             let tmpFileName = this.filePathes.shift();
