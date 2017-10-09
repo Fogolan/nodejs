@@ -40,7 +40,7 @@ class Client {
         });
     }
 
-    sendFile(client) {
+    sendFile(client) { //TODO: remove client.write functionality. Use pipes
         if (this.filePathes && this.filePathes.length !== 0) {
     
             let tmpFileName = this.filePathes.shift();
