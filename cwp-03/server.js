@@ -25,12 +25,14 @@ class Server {
 
     createFileFromBinData(id, fileName) {
         let fileData = Buffer.concat(this.filesChanks[id]);
-        fs.writeFile(__dirname + '/dist/' + fileName, 'utf8', fileData, function (err) {
+        fs.writeFile(__dirname + path.sep + 'recievedFiles' + path.sep + fileName, fileData, function (err) {
             if (err)
             console.error(err);
+            return false;
             }
         );
         this.filesChanks[id]=[];
+        return true;
     }
 
     ClientDialogFILES(data, client) {
@@ -41,9 +43,8 @@ class Server {
         }
 
         this.filesChanks[client.id].push(bufferChank);        
-        this.createFileFromBinData(client.id, fileObject.fileName);
         
-        return false;
+        return this.createFileFromBinData(client.id, fileObject.fileName);
     }
 
     checkInitMessage(data, client) {
