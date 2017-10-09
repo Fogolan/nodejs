@@ -4,6 +4,9 @@ const encoding = 'utf8';
 const serverResOKstatus = 'ACK';
 const serverResErrstatus = 'DEC';
 const filesConnectString = 'FILES';
+const endSendingFile = "ENDFILE";
+const sendNextFile = 'NEXTFILE';
+const error = 'ERROR';
 
 module.exports = {
     host: host,
@@ -15,4 +18,7 @@ module.exports = {
     serverResOKstatus: serverResOKstatus,
     serverResErrstatus: serverResErrstatus,
     filesConnectString: filesConnectString,
+    endSendingFile: endSendingFile,
+    sendNextFile: sendNextFile,
+    error: error,
 }
