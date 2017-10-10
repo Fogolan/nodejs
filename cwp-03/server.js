@@ -15,23 +15,28 @@ class Server {
     request(data, client) {
         console.log('from client: ', data.toString());
         if(client.id != undefined) {
-            let result = (this.ClientDialogFILES(data, client)) ? constants.sendNextFile : constants.error;
-            console.log(result);
-            return result;
+            return this.ClientDialogFILES(data, client);
         }
-        let result = this.checkInitMessage(data, client);
-        return result;
+        return this.checkInitMessage(data, client);
     }
 
-    createFileFromBinData(id, fileName) {
-        let fileData = Buffer.concat(this.filesChanks[id]);
-        fs.writeFile(__dirname + path.sep + 'recievedFiles' + path.sep + fileName, fileData, function (err) {
+    getFilePathPattern(clientId, fileName) {
+        let pathPattern = __dirname + path.sep + clientId.toString() + path.sep;
+        if (!fs.existsSync(pathPattern)){ //I don't know why but nodejs doesn't want to create directory with file just only directory
+            fs.mkdirSync(pathPattern);
+        }
+        return pathPattern + fileName;
+    }
+
+    createFileFromBinData(clientId, fileName) {
+        let fileData = Buffer.concat(this.filesChanks[clientId]);
+        fs.writeFile(this.getFilePathPattern(clientId, fileName), fileData, function (err) {
             if (err)
             console.error(err);
             return false;
             }
         );
-        this.filesChanks[id]=[];
+        this.filesChanks[clientId]=[];
         return true;
     }
 
@@ -44,7 +49,7 @@ class Server {
 
         this.filesChanks[client.id].push(bufferChank);        
         
-        return this.createFileFromBinData(client.id, fileObject.fileName);
+        return (this.createFileFromBinData(client.id, fileObject.fileName)) ? constants.sendNextFile : constants.error;
     }
 
     checkInitMessage(data, client) {
