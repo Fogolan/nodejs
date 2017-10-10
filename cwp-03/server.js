@@ -8,7 +8,6 @@ const constants = require('./modules/constants_module');
 class Server {
     constructor(maxNumberOfClients) {
         this.clients = [];
-        this.filesChanks = [];
         this.maxClients = maxNumberOfClients;
     }
 
@@ -28,28 +27,21 @@ class Server {
         return pathPattern + fileName;
     }
 
-    createFileFromBinData(clientId, fileName) {
-        let fileData = Buffer.concat(this.filesChanks[clientId]);
-        fs.writeFile(this.getFilePathPattern(clientId, fileName), fileData, function (err) {
+    createFileFromBinData(clientId, fileName, fileBuffer) {
+        fs.writeFile(this.getFilePathPattern(clientId, fileName), fileBuffer, function (err) {
             if (err)
             console.error(err);
             return false;
             }
         );
-        this.filesChanks[clientId]=[];
         return true;
     }
 
     ClientDialogFILES(data, client) {
         let fileObject = JSON.decode(data);
         let bufferChank = Buffer.from(fileObject.fileBuffer);
-        if(!this.filesChanks[client.id]) {
-            this.filesChanks[client.id] = [];            
-        }
-
-        this.filesChanks[client.id].push(bufferChank);        
         
-        return (this.createFileFromBinData(client.id, fileObject.fileName)) ? constants.sendNextFile : constants.error;
+        return (this.createFileFromBinData(client.id, fileObject.fileName, fileObject.fileBuffer)) ? constants.sendNextFile : constants.error;
     }
 
     checkInitMessage(data, client) {
