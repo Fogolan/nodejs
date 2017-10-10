@@ -17,9 +17,18 @@ class Client {
         if(data === constants.serverResErrstatus) { //It needs to strategy pattern implementation but it's just node.js I will not do this
             client.destroy();
         }
+
         if(data === constants.serverResOKstatus) {
             console.log('I am starting to send files');
             this.getDirectories(this.argv);
+            this.sendFile(client);
+        }
+
+        if(data === constants.sendNextFile) {
+            this.sendFile(client);
+        }
+
+        if(data === constants.error) {
             this.sendFile(client);
         }
     }
@@ -42,9 +51,8 @@ class Client {
         });
     }
 
-    sendFile(client) { //TODO: remove client.write functionality. Use pipes
+    sendFile(client) { //TODO: remove client.write functionality
         if (this.filePathes && this.filePathes.length !== 0) {
-    
             let tmpFileName = this.filePathes.shift();
             fs.readFile(tmpFileName, function(err, data) {
                 let fileMessage = new FileMessage(path.basename(tmpFileName), data);
