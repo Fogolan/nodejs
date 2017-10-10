@@ -14,6 +14,4 @@ module.exports = {
     endFileTag: constants.endFileTag,
     sendNextFile: constants.sendNextFile,
     error: constants.error,
-    fileSeparator: constants.fileSeparator,
-    endFileTag: constants.endFileTag,
 }
