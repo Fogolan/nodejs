@@ -6,14 +6,15 @@ const constants = require('./modules/constants_module');
 const Server = require('./server');
 
 let clients = [];
+let maxClientsCount = 5;
 
-let clientManager = new Server(5);
+let clientManager = new Server(maxClientsCount);
 
 let server = net.createServer(function (client) {
-    client.on('data', initStringFromClient);
+    client.on('data', responseFromClient);
     client.on('error', errorFromClient);
 
-    function initStringFromClient(data, error) {
+    function responseFromClient(data, error) {
         client.write(clientManager.request(data, client));
     }
 
