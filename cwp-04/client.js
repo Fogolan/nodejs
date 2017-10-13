@@ -28,10 +28,6 @@ class Client {
         }
     }
 
-    commandExecuted() {
-        
-    }
-
     getRequest(argv) {
         let request = new RequestMessage(this.requestType, this.filePath);
         return JSON.encode(request);
