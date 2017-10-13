@@ -3,13 +3,13 @@ const path = require('path');
 const JSON = require ('serialize-json');
 
 const constants = require('./modules/constants_module')
-const FileMessage = require('./modules/fileMessage');
+const RequestMessage = require('./modules/requestMessage');
 
 class Client {
 
-    constructor(argv) {
-        this.filePathes = [];
-        this.argv = argv;
+    constructor(requestType, filePath) {
+        this.requestType = requestType;
+        this.filePath = filePath;
     }
 
     response(data, client) {
@@ -18,49 +18,23 @@ class Client {
             client.destroy();
         }
 
+        if(data === constants.serverResEndstatus) {
+            client.destroy();
+        }
+
         if(data === constants.serverResOKstatus) {
-            console.log('I am starting to send files');
-            this.getDirectories(this.argv);
-            this.sendFile(client);
-        }
-
-        if(data === constants.sendNextFile) {
-            this.sendFile(client);
-        }
-
-        if(data === constants.error) {
-            this.sendFile(client);
+            console.log('I am starting to send request');
+            return this.getRequest(this.argv);
         }
     }
 
-    getAllFilesNames(dirPath, fileNamesArray) { //I don't know why but I need to get this.filePhathes from function parameters because it can't see it other ways
-        fs.readdirSync(dirPath).forEach(function(fileName) {
-            let filePath = path.normalize(dirPath + '\\' + fileName);
-            if (fs.statSync(filePath).isFile()) {
-                fileNamesArray.push(filePath);
-            }
-            else {
-                this.getAllFilesNames(filePath);
-            }
-        })
+    commandExecuted() {
+        
     }
 
-    getDirectories(directories) {
-        directories.forEach((element) => {
-            this.getAllFilesNames(element, this.filePathes);
-        });
-    }
-
-    sendFile(client) { //TODO: remove client.write functionality
-        if (this.filePathes && this.filePathes.length !== 0) {
-            let tmpFileName = this.filePathes.shift();
-            fs.readFile(tmpFileName, function(err, data) {
-                let fileMessage = new FileMessage(path.basename(tmpFileName), data);
-                client.write(JSON.encode(fileMessage));
-            });
-        } else {
-            client.end();
-        }
+    getRequest(argv) {
+        let request = new RequestMessage(this.requestType, this.filePath);
+        return JSON.encode(request);
     }
 
 }
