@@ -3,7 +3,7 @@ const port = 3001;
 const encoding = 'utf8';
 const serverResOKstatus = 'ACK';
 const serverResErrstatus = 'DEC';
-const filesConnectString = 'FILES';
+const filesConnectString = 'REMOTE';
 const sendNextFile = 'NEXTFILE';
 const error = 'ERROR';
 
