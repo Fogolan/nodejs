@@ -10,6 +10,7 @@ const error = 'ERROR';
 const copy = "COPY";
 const encode = "ENCODE";
 const decode = "DECODE";
+const encodeAlgorithm = "aes-256-ctr";
 
 module.exports = {
     host: host,
@@ -28,4 +29,5 @@ module.exports = {
     copy: copy,
     encode: encode,
     decode: decode,
+    encodeAlgorithm: encodeAlgorithm,
 }

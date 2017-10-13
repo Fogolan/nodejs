@@ -18,4 +18,5 @@ module.exports = {
     copy: constants.copy,
     encode: constants.encode,
     decode: constants.decode,
+    encodeAlgorithm: constants.encodeAlgorithm,
 }

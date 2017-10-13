@@ -2,8 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const uuidv4 = require('uuid/v4');
 const JSON = require('serialize-json');
+const crypto = require('crypto');
 
 const constants = require('./modules/constants_module');
+
+const recievedFilesFolder = "recievedFiles";
 
 class Server {
     constructor(maxNumberOfClients) {
@@ -30,6 +33,7 @@ class Server {
                 return this.decodeRequestCommand(client.id, requestObject.filePath, requestObject.key);
                 break;
             case constants.encode:
+                return this.encodeRequestCommand(client.id, requestObject.filePath, requestObject.key);
                 break;
             default:
                 return constants.error;
@@ -46,28 +50,37 @@ class Server {
 
     copyRequestCommand(clientId, filePath) {
         console.log('current filePath: ', filePath);
-        let readableStream = fs.createReadStream(filePath, constants.encoding);
-        let fileName = path.basename(filePath);
-        var writeableStream = fs.createWriteStream(this.getFilePathPattern(clientId, fileName));
-        readableStream.pipe(writeableStream);
+        var newFilePath = this.getFilePathPattern(clientId, path.basename(filePath));
+        this.createFileWithStream(filePath, newFilePath);
 
         return constants.serverResEndstatus;
     }
 
     decodeRequestCommand(clientId, filePath, key) {
-        let readableStream = fs.createReadStream(filePath, constants.encoding);
-        let fileName = path.basename(filePath);
-        var writeableStream = fs.createWriteStream(this.getFilePathPattern(clientId, fileName));
-        readableStream.pipe(writeableStream);
+        var newFilePath = __dirname + path.sep + recievedFilesFolder + path.sep + clientId + '_' + path.basename(filePath);
+        console.log("decode key ", key);
+        this.createFileWithStream(filePath, newFilePath, crypto.createDecipher(constants.encodeAlgorithm, key));
+
+        return constants.serverResEndstatus;
     }
 
-    createFileWithStream(clientId, filePath, transformStream) {
+    encodeRequestCommand(clientId, filePath, key) {
+        var newFilePath = __dirname + path.sep + recievedFilesFolder + path.sep + clientId + '_' + path.basename(filePath);
+        console.log("encode key ", key);
+        this.createFileWithStream(filePath, newFilePath, crypto.createCipher(constants.encodeAlgorithm, key));
 
-        let fileName = path.basename(filePath);
+        return constants.serverResEndstatus;
+    }
+
+    createFileWithStream(filePath, newFilePath, transformStream) {
 
         let readableStream = fs.createReadStream(filePath, constants.encoding);
-        let writeableStream = fs.createWriteStream(this.getFilePathPattern(clientId, fileName));
-        readableStream.pipe(writeableStream);
+        let writeableStream = fs.createWriteStream(newFilePath);
+        if (transformStream) {
+            readableStream.pipe(transformStream).pipe(writeableStream);
+        } else {
+            readableStream.pipe(writeableStream);
+        }
     }
 
     createFileFromBinData(clientId, fileName, fileBuffer) {
