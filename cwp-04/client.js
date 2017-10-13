@@ -5,6 +5,8 @@ const JSON = require ('serialize-json');
 const constants = require('./modules/constants_module')
 const RequestMessage = require('./modules/requestMessage');
 
+const key = "j5kdFJK3dfjKJDf";
+
 class Client {
 
     constructor(requestType, filePath) {
@@ -24,13 +26,21 @@ class Client {
 
         if(data === constants.serverResOKstatus) {
             console.log('I am starting to send request');
-            return this.getRequest(this.argv);
+            return this.getRequest();
         }
     }
 
-    getRequest(argv) {
-        let request = new RequestMessage(this.requestType, this.filePath);
-        return JSON.encode(request);
+    getRequest() {
+        let requestObject = this.createRequestObject();
+        
+        return JSON.encode(requestObject);
+    }
+
+    createRequestObject() {
+        if(this.requestType === constants.copy) {
+            return new RequestMessage(this.requestType, this.filePath);
+        }
+        return new RequestMessage(this.requestType, this.filePath, key);
     }
 
 }

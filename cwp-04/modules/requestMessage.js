@@ -1,7 +1,9 @@
 class RequestMessage{
-    constructor(requestType, filePath) {
+    
+    constructor(requestType, filePath, key) {
         this.requestType = requestType;
         this.filePath = filePath;
+        this.key = key;
     }
 }
 

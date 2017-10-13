@@ -27,6 +27,7 @@ class Server {
                 return this.copyRequestCommand(client.id, requestObject.filePath);
                 break;
             case constants.decode:
+                return this.decodeRequestCommand(client.id, requestObject.filePath, requestObject.key);
                 break;
             case constants.encode:
                 break;
@@ -51,6 +52,22 @@ class Server {
         readableStream.pipe(writeableStream);
 
         return constants.serverResEndstatus;
+    }
+
+    decodeRequestCommand(clientId, filePath, key) {
+        let readableStream = fs.createReadStream(filePath, constants.encoding);
+        let fileName = path.basename(filePath);
+        var writeableStream = fs.createWriteStream(this.getFilePathPattern(clientId, fileName));
+        readableStream.pipe(writeableStream);
+    }
+
+    createFileWithStream(clientId, filePath, transformStream) {
+
+        let fileName = path.basename(filePath);
+
+        let readableStream = fs.createReadStream(filePath, constants.encoding);
+        let writeableStream = fs.createWriteStream(this.getFilePathPattern(clientId, fileName));
+        readableStream.pipe(writeableStream);
     }
 
     createFileFromBinData(clientId, fileName, fileBuffer) {
