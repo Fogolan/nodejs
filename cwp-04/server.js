@@ -59,27 +59,30 @@ class Server {
     decodeRequestCommand(clientId, filePath, key) {
         var newFilePath = __dirname + path.sep + recievedFilesFolder + path.sep + clientId + '_' + path.basename(filePath);
         console.log("decode key ", key);
-        this.createFileWithStream(filePath, newFilePath, crypto.createDecipher(constants.encodeAlgorithm, key));
-
-        return constants.serverResEndstatus;
+        let result = this.createFileWithStream(filePath, newFilePath, crypto.createDecipher(constants.encodeAlgorithm, key));
+        return result;
     }
 
     encodeRequestCommand(clientId, filePath, key) {
         var newFilePath = __dirname + path.sep + recievedFilesFolder + path.sep + clientId + '_' + path.basename(filePath);
         console.log("encode key ", key);
-        this.createFileWithStream(filePath, newFilePath, crypto.createCipher(constants.encodeAlgorithm, key));
-
-        return constants.serverResEndstatus;
+        let result = this.createFileWithStream(filePath, newFilePath, crypto.createCipher(constants.encodeAlgorithm, key));
+        return result;
     }
 
     createFileWithStream(filePath, newFilePath, transformStream) {
-
-        let readableStream = fs.createReadStream(filePath, constants.encoding);
-        let writeableStream = fs.createWriteStream(newFilePath);
-        if (transformStream) {
-            readableStream.pipe(transformStream).pipe(writeableStream);
-        } else {
-            readableStream.pipe(writeableStream);
+        try {
+            let readableStream = fs.createReadStream(filePath, constants.encoding);
+            let writeableStream = fs.createWriteStream(newFilePath);
+            if (transformStream) {
+                readableStream.pipe(transformStream).pipe(writeableStream);
+            } else {
+                readableStream.pipe(writeableStream);
+            }
+            return constants.serverResEndstatus;
+        }
+        catch (err) {
+            return constants.error;
         }
     }
 
