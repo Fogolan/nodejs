@@ -15,7 +15,10 @@ let server = net.createServer(function (client) {
     client.on('error', errorFromClient);
 
     function responseFromClient(data, error) {
-        client.write(clientManager.request(data, client));
+        let response = clientManager.request(data, client);
+        if(response) {
+            client.write(response);
+        }
     }
 
     function errorFromClient(error) {
