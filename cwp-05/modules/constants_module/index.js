@@ -17,4 +17,5 @@ module.exports = {
     error: constants.error,
     
     baseUrl: urls.baseUrl,
+    articleControllerUrl: urls.articleControllerUrl,
 }
