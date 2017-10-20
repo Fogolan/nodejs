@@ -1,9 +1,10 @@
 const constants = require('../modules/constants_module');
 
-class rootMechanism {
+class RootMechanism {
 
     constructor(controllers) {
         this.controllers = controllers;
+        this.setControllersHandlers(this.controllers);
     }
 
     setControllersHandlers(controllers) {
@@ -18,6 +19,7 @@ class rootMechanism {
                 controllerUrl: controller.controllerUrl,
                 methodHandlers: controller.handlers
             }
+            console.log('controllerHandler: ', controllerHandler);
 
             this.handlers.push(controllerHandler);
 
@@ -25,17 +27,21 @@ class rootMechanism {
     }
 
     getHandler(url, requestType) {
-        if(url.startWith(constants.baseUrl)) {
-            let controllerName = url.substr(1);
-            let methodName = url.substr(2);
+        if(url.startsWith(constants.baseUrl)) {
+            let controllerName = url.substr(constants.baseUrl.length);
+            console.log('controller name: ', controllerName);
+            return this.findMethod(controllerName, requestType);
         }
     }
 
-    findMethod(controllerName, methodName, requestType) {
+    findMethod(controllerName, requestType) {
+        console.log('handlers: ', this.handlers);
         this.handlers.forEach(function(handler) {
             if(handler.controllerUrl === controllerName) {
                 handler.methodHandlers.forEach(function(method) {
-                    if(method.url === methodName && method.requestType === requestType) {
+                    console.log('method: ', method);
+                    if(method.requestType === requestType) {
+                        console.log('I return methodHandler: ', method.handler);
                         return method.handler;
                     }
                 })
@@ -43,3 +49,5 @@ class rootMechanism {
         });
     }
 }
+
+module.exports = RootMechanism;
