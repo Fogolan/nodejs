@@ -1,4 +1,5 @@
 constants = require('./constants');
+urls = require('./url_constants');
 
 module.exports = {
     host: constants.host,
@@ -14,4 +15,6 @@ module.exports = {
     endFileTag: constants.endFileTag,
     sendNextFile: constants.sendNextFile,
     error: constants.error,
+    
+    baseUrl: urls.baseUrl,
 }
