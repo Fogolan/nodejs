@@ -30,23 +30,29 @@ class RootMechanism {
         if(url.startsWith(constants.baseUrl)) {
             let controllerName = url.substr(constants.baseUrl.length);
             console.log('controller name: ', controllerName);
-            return this.findMethod(controllerName, requestType);
+            let result = this.findMethod(controllerName, requestType);
+            console.log('this.result: ', result);
+            return result;
         }
     }
 
     findMethod(controllerName, requestType) {
+        let result;
         console.log('handlers: ', this.handlers);
         this.handlers.forEach(function(handler) {
             if(handler.controllerUrl === controllerName) {
                 handler.methodHandlers.forEach(function(method) {
                     console.log('method: ', method);
                     if(method.requestType === requestType) {
-                        console.log('I return methodHandler: ', method.handler);
-                        return method.handler;
+                        console.log('I execute methodHandler: ', method.handler());
+                        result = method.handler;
+                        console.log('I return method: ', result);
+                        return false;
                     }
                 })
             }
         });
+        return result;
     }
 }
 

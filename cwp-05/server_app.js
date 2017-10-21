@@ -8,7 +8,6 @@ const RootMechanism = require('./constollers/rootMechanism');
 let controllers = [new ArticleController(),];
 let rootMechanism = new RootMechanism(controllers);
 
-
 http.createServer(function(request, response){
     
 //    console.log("Url: " + request.url);
@@ -18,8 +17,7 @@ http.createServer(function(request, response){
 //    console.log(request.headers);
 
     let handler = rootMechanism.getHandler(request.url, request.method);
-
-    console.log(handler);
+    console.log(handler());
     
    response.end();
 }).listen(constants.port);
