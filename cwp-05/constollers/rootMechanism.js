@@ -10,8 +10,8 @@ class RootMechanism {
     setControllersHandlers(controllers) {
         this.handlers = [];
 
-        controllers.forEach(function(controller) {
-            if(!controller) {
+        controllers.forEach(function (controller) {
+            if (!controller) {
                 return;
             }
 
@@ -26,28 +26,31 @@ class RootMechanism {
         }, this);
     }
 
-    getHandler(url, requestType) {
-        if(url.startsWith(constants.baseUrl)) {
+    getHandler(url, requestType, paramsCount) {
+        console.log('url: ', url);
+        if (url.startsWith(constants.baseUrl)) {
             let controllerName = url.substr(constants.baseUrl.length);
             console.log('controller name: ', controllerName);
-            let result = this.findMethod(controllerName, requestType);
-            console.log('this.result: ', result);
+            let result = this.findMethod(controllerName, requestType, paramsCount);
+            console.log('result: ', result);
             return result;
         }
     }
 
-    findMethod(controllerName, requestType) {
+    findMethod(controllerName, requestType, paramsCount) {
         let result;
         console.log('handlers: ', this.handlers);
-        this.handlers.forEach(function(handler) {
-            if(handler.controllerUrl === controllerName) {
-                handler.methodHandlers.forEach(function(method) {
+        this.handlers.forEach(function (handler) {
+            console.log('handler: ', handler);
+            if (handler.controllerUrl === controllerName) {
+                handler.methodHandlers.forEach(function (method) {
                     console.log('method: ', method);
-                    if(method.requestType === requestType) {
-                        console.log('I execute methodHandler: ', method.handler());
-                        result = method.handler;
-                        console.log('I return method: ', result);
-                        return false;
+                    if (method.requestType === requestType) {
+                        if (method.paramsCount == paramsCount) {
+                            result = method.handler;
+                            console.log('I return method: ', result);
+                            return false;
+                        }
                     }
                 })
             }

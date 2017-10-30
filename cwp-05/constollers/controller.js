@@ -7,14 +7,15 @@ class Controller {
         this.controllerMethod = [];
     }
 
-    addHandlerToController(requestType, handler) {
+    addHandlerToController(requestType, handler, paramsCount) {
         if(!this.handlers) {
             this.handlers = [];
         }
 
         this.handlers.push({
             requestType: requestType,
-            handler: handler
+            handler: handler,
+            paramsCount: paramsCount,
         });
     }
 }
