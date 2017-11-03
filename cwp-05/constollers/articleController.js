@@ -8,14 +8,10 @@ let articles = require('../content/articles.json');
 class ArticleController extends Controller {
     constructor() {
         super(constants.articleControllerUrl);
-        super.addHandlerToController("GET", this.getArticle, 1);
-        super.addHandlerToController("GET", this.getArticles, 0);
-        super.addHandlerToController("POST", this.createArticle, 1);
-        super.addHandlerToController("PUT", this.updateArticle, 1);
-        super.addHandlerToController("DELETE", this.deleteArticle, 1);
+        super.addHandlersToController(this.getControllersMethods());
     }
 
-    GetcontrollersMethods() {
+    getControllersMethods() {
         return [
             {
                 requestType: "GET",
@@ -30,7 +26,7 @@ class ArticleController extends Controller {
             {
                 requestType: "POST",
                 handler: this.createArticle,
-                paramsCount: 0,
+                paramsCount: 1,
             },
             {
                 requestType: "PUT",
@@ -40,10 +36,11 @@ class ArticleController extends Controller {
         ]
     }
 
-    createArticle(article) {
+    createArticle(paramsArray) {
+        let article = paramsArray[0];
         console.log('validation: ', validation.isValidArticle(article));
         if (validation.isValidArticle(article)) {
-            article.id = articles.count;
+            article.id = (articles.length + 1).toString();
             articles.push(article);
             return errors.ok;
         }
@@ -52,9 +49,10 @@ class ArticleController extends Controller {
 
     getArticle(paramsArray) {
         let result;
+        let articleId = paramsArray[0];
         articles.forEach(function (article) {
-            if (article.id === paramsArray[0]) {
-                console.log('article id = ', paramsArray[0], ' ', article);
+            if (article.id === articleId) {
+                console.log('article id = ', articleId, ' ', article);
                 result = article;
             }
         }, this);
@@ -70,11 +68,12 @@ class ArticleController extends Controller {
     }
 
     updateArticle(paramsArray) {
+        let newArticle = paramsArray[0];
         console.log('try to update article: ', paramsArray);
-        if (validation.isValidArticle(paramsArray[0])) {
+        if (validation.isValidArticle(newArticle)) {
             for (var index = 0; index < articles.length; index++) {
-                if (paramsArray[0].id && articles[index].id == paramsArray[0].id) {
-                    Object.assign(articles[index], paramsArray[0]);
+                if (newArticle.id && articles[index].id == newArticle.id) {
+                    Object.assign(articles[index], newArticle);
                     return errors.ok;
                 }
             }
@@ -83,9 +82,10 @@ class ArticleController extends Controller {
     }
 
     deleteArticle(paramsArray) {
+        let articleId = paramsArray[0].id;
         for (var index = 0; index < articles.length; index++) {
-            if (paramsArray[0].id && articles[index].id == paramsArray[0].id) {
-                articles.splice(articles.findIndex(x => x.id == paramsArray[0].id), 1);
+            if (articleId && articles[index].id == articleId) {
+                articles.splice(articles.findIndex(x => x.id == articleId), 1);
                 return errors.ok;
             }
         }
