@@ -2,7 +2,8 @@ const Controller = require('./controller');
 const constants = require('../modules/constants_module');
 const errors = require('../content/responses.json');
 const validation = require('../modules/helpers/validationHelper.js');
-const sortHelper = require('../modules/helpers/sortHelper.js')
+const sortHelper = require('../modules/helpers/sortHelper.js');
+const paginationHelper = require('../modules/helpers/paginationHelper.js');
 
 let articles = require('../content/articles.json');
 
@@ -66,12 +67,33 @@ class ArticleController extends Controller {
     }
 
     getArticles(queryObject) {
-        if (queryObject.sortField) {
-            let sortMode = sortHelper.Sort(queryObject.sortField, queryObject.sortOrder);
-            return articles.sort(sortMode);
+
+        let result = articles;
+
+        if (queryObject.includeDeps == "false") {
+            result = [];
+            for (let i = 0; i < articles.length; i++) {
+                let element = {
+                    id: articles[i].id,
+                    title: articles[i].title,
+                    text: articles[i].text,
+                    date: articles[i].date,
+                    author: articles[i].author
+                };
+                result.push(element);
+            }
         }
 
-        return articles;
+        if (queryObject.sortField) {
+            let sortMode = sortHelper.Sort(queryObject.sortField, queryObject.sortOrder);
+            result = articles.sort(sortMode);
+        }
+
+        if (queryObject.page && queryObject.limit) {
+            result = paginationHelper.getPaginatedItems(articles, queryObject.page, queryObject.limit);
+        }
+
+        return result;
     }
 
     updateArticle(paramsArray) {
