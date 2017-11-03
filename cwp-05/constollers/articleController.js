@@ -41,10 +41,10 @@ class ArticleController extends Controller {
     createArticle(paramsArray) {
         let article = paramsArray[0];
         let currentDate = new Date();
+        article.date = currentDate.getDate() + '' + currentDate.getMonth() + '' + currentDate.getFullYear();
 
         if (validation.isValidArticle(article)) {
             article.id = (articles.length + 1).toString();
-            article.date = currentDate.getDate() + '' + currentDate.getMonth() + '' + currentDate.getFullYear();
             articles.push(article);
             return errors.ok;
         }
