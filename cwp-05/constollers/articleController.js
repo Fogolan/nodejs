@@ -38,7 +38,6 @@ class ArticleController extends Controller {
 
     createArticle(paramsArray) {
         let article = paramsArray[0];
-        console.log('validation: ', validation.isValidArticle(article));
         if (validation.isValidArticle(article)) {
             article.id = (articles.length + 1).toString();
             articles.push(article);
@@ -52,7 +51,6 @@ class ArticleController extends Controller {
         let articleId = paramsArray[0];
         articles.forEach(function (article) {
             if (article.id === articleId) {
-                console.log('article id = ', articleId, ' ', article);
                 result = article;
             }
         }, this);
@@ -69,7 +67,6 @@ class ArticleController extends Controller {
 
     updateArticle(paramsArray) {
         let newArticle = paramsArray[0];
-        console.log('try to update article: ', paramsArray);
         if (validation.isValidArticle(newArticle)) {
             for (var index = 0; index < articles.length; index++) {
                 if (newArticle.id && articles[index].id == newArticle.id) {
