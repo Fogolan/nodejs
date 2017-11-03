@@ -1,1 +1,81 @@
-<h1>Hello! It's index.html</h1>
+<html>
+
+<head>
+    <title>All Articles</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="site.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <label>Порядок сортировки</label>
+    <br />
+    <input type="radio" id='rad1' name='rad' value="1" checked>Прямой</input>
+    <br />
+    <input type="radio" id='rad2' name='rad' value='2'>Обратный</input>
+    <br />
+    <input type="submit" value="Click me" onclick="getElements(0)"></input>
+    <br />
+    <p>
+        <input id="nav-button-1" style="display:none" type="button" value="prev" onclick="getElements(0)"></input>
+        <input id="nav-button-2" style="display:none" type="button" value="next" onclick="getElements(0)"></input>
+    </p>
+    <div id="articles"></div>
+    <a href="form.html">Создать статью</a>
+</body>
+<script>
+    var currentPage = 0;
+    let check = undefined;
+    function getElements(i) {
+        var btn1 = document.getElementById('nav-button-1');
+        var btn2 = document.getElementById('nav-button-2');
+
+        btn1.style.display = 'block';
+        btn2.style.display = 'block';
+
+        let str = `?sortOrder=desc&limit=5&page=${i}`;
+        if (!check) {
+            if (document.getElementById("rad1").checked == true) {
+                str = `?sortOrder=asc&limit=5&page=${i}`;
+                check = 'asc';
+            }
+            else check = 'desc';
+        }
+        else {
+            switch (check) {
+                case 'asc': str = `?sortOrder=asc&limit=2&page=${i}`;
+                case 'desc': str = `?sortOrder=desc&limit=2&page=${i}`;
+            }
+        }
+        let doc = document.getElementsByTagName('body')[0];
+        $.get('/api/article/' + str, (data) => {
+            var articles = JSON.parse(data);
+            console.log(articles.items);
+            $('#articles').empty();
+            articles.items.forEach((element) => {
+                $('#articles').append(`<div id='article'>` +
+                    `<div class='date'>   ${element.date}  </div>` +
+                    `<div class='title'>  ${element.title} </div>` +
+                    `<div class='text'>'  ${element.text}  </div>` +
+                    `<div class='author'>'${element.author} </div>` +
+                    `</div><br />`);
+            }, this);
+            let numb = parseInt(articles.meta.pages);
+            for (let i = 1; i <= numb; ++i) {
+                doc.innerHTML += (`<input type="button" onclick='getElements(${i})' value='${i}'"></input>`);
+            }
+            console.log(doc.innerHTML);
+        });
+    }
+    function nextPage() {
+        currentPage++;
+        getElements(currentPage);
+    }
+
+    function prevPage() {
+        currentPage--;
+        getElements(currentPage);
+    }
+</script>
+
+</html>
