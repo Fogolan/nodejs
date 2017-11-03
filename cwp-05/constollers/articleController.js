@@ -2,6 +2,7 @@ const Controller = require('./controller');
 const constants = require('../modules/constants_module');
 const errors = require('../content/responses.json');
 const validation = require('../modules/helpers/validationHelper.js');
+const sortHelper = require('../modules/helpers/sortHelper.js')
 
 let articles = require('../content/articles.json');
 
@@ -38,8 +39,11 @@ class ArticleController extends Controller {
 
     createArticle(paramsArray) {
         let article = paramsArray[0];
+        let currentDate = new Date();
+
         if (validation.isValidArticle(article)) {
             article.id = (articles.length + 1).toString();
+            article.date = currentDate.getDate() + '' + currentDate.getMonth() + '' + currentDate.getFullYear();
             articles.push(article);
             return errors.ok;
         }
@@ -61,7 +65,12 @@ class ArticleController extends Controller {
         return result;
     }
 
-    getArticles() {
+    getArticles(queryObject) {
+        if(queryObject.sortField) {
+            let sortMode = sortHelper.Sort(queryObject.sortField, queryObject.sortOrder);
+            return articles.sort(sortMode);
+        }
+
         return articles;
     }
 

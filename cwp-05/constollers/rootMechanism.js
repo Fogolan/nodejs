@@ -39,7 +39,7 @@ class RootMechanism {
             if (handler.controllerUrl === controllerName) {
                 handler.methodHandlers.forEach(function (method) {
                     if (method.requestType === requestType) {
-                        if (method.paramsCount == paramsCount) {
+                        if (method.paramsCount <= paramsCount) {
                             result = method.handler;
                             return false;
                         }
