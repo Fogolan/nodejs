@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const urlHelper = require('url');
 
 const constants = require('./modules/constants_module');
 const ArticleController = require('./constollers/articleController');
@@ -11,31 +12,12 @@ let rootMechanism = new RootMechanism(controllers);
 http.createServer(function (request, response) {
     
     let paramArray = [];
+    let queryObject = {};
     let url = request.url;
     if (request.method == 'GET') {
-        let params = request.url.split('?');
-        if (params) {
-            url = params[0];
-            params = params[1];
-            if (params) {
-                let index = params.indexOf('&');
-                if (index !== -1) {
-                    params = params.split('&');
-                    params.forEach(function (param) {
-                        let parameter = param.split('=');
-                        if (parameter[1]) {
-                            paramArray.push(parameter[1]);
-                        }
-                    })
-                } else {
-                    let parameter = params.split('=');
-                    if (parameter[1]) {
-                        paramArray.push(parameter[1]);
-                    }
-                }
-            }
-        }
-        processRequest(url, request.method, paramArray, response);
+        queryObject = urlHelper.parse(url, true).query;
+        url = urlHelper.parse(url, true).pathname;
+        processRequest(url, request.method, queryObject, response);
     } else {
         let post = '';
 
@@ -56,10 +38,11 @@ http.createServer(function (request, response) {
     }
 }).listen(constants.port);
 
-function processRequest(url, requestType, paramArray, response) {
+function processRequest(url, requestType, queryObject, response) {
+    let paramArray = Object.keys(queryObject).map(function (key) { return queryObject[key]; });
     let handler = rootMechanism.getHandler(url, requestType, paramArray.length);
     if (handler) {
-        let responseData = handler(paramArray);
+        let responseData = handler(queryObject);
         response.statusCode = '200';
         response.write(JSON.stringify(responseData));
     }
