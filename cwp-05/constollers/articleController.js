@@ -46,15 +46,15 @@ class ArticleController extends Controller {
         return errors.request_invalid;
     }
 
-    getArticle(paramsArray) {
+    getArticle(queryObject) {
         let result;
-        let articleId = paramsArray[0];
+        let articleId = queryObject.id;
         articles.forEach(function (article) {
             if (article.id === articleId) {
                 result = article;
             }
         }, this);
-        if (!result) {
+        if (!result || !articleId) {
             return errors.request_invalid;
         }
 
