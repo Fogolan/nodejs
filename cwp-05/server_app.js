@@ -5,6 +5,7 @@ const urlHelper = require('url');
 const constants = require('./modules/constants_module');
 const ArticleController = require('./constollers/articleController');
 const RootMechanism = require('./constollers/rootMechanism');
+const staticHelper = require('./modules/helpers/staticHelper');
 
 let controllers = [new ArticleController(),];
 let rootMechanism = new RootMechanism(controllers);
@@ -47,6 +48,10 @@ function processRequest(url, requestType, queryObject, response) {
         response.write(JSON.stringify(responseData));
     }
     else {
+        if(url.startsWith(constants.publicUrl)) {
+            staticHelper.getStaticFile(url.split(constants.publicUrl)[1], response);
+            return;
+        }
         response.statusCode = '404';
         response.write('404 not found');
     }
