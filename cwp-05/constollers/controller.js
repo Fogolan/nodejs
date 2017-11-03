@@ -18,6 +18,20 @@ class Controller {
             paramsCount: paramsCount,
         });
     }
+
+    addHandlersToController(handlers) {
+        if(!this.handlers) {
+            this.handlers = [];
+        }
+
+        handlers.forEach(function(handler) {
+            this.handlers.push({
+                requestType: handler.requestType,
+                handler: handler.handler,
+                paramsCount: handler.paramsCount,
+            });
+        }, this);
+    }
 }
 
 module.exports = Controller;
