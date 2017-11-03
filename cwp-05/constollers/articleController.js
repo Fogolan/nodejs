@@ -66,7 +66,7 @@ class ArticleController extends Controller {
     }
 
     getArticles(queryObject) {
-        if(queryObject.sortField) {
+        if (queryObject.sortField) {
             let sortMode = sortHelper.Sort(queryObject.sortField, queryObject.sortOrder);
             return articles.sort(sortMode);
         }
