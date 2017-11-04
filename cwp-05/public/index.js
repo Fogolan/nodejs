@@ -1,24 +1,54 @@
-var pageNumber = 0;
-var maxPages = 1;
-function getArticles(params) {
-    var url = '/api/article/?page=' + pageNumber + '&limit=2';
-    $.get(url,
-        function (data) {
+let currentPage = 0;
+let pages;
+let check = undefined;
+    function getElements() {
+        var btn1 = document.getElementById('nav-button-1');
+        var btn2 = document.getElementById('nav-button-2');
+
+        btn1.style.display = 'block';
+        btn2.style.display = 'block';
+
+        let str = `?sortOrder=desc&limit=5&page=${currentPage}`;
+        if (!check) {
+            if (document.getElementById("rad1").checked == true) {
+                str = `?sortOrder=asc&limit=5&page=${currentPage}`;
+                check = 'asc';
+            }
+            else check = 'desc';
+        }
+        else {
+            switch (check) {
+                case 'asc': str = `?sortOrder=asc&limit=5&page=${currentPage}`;
+                case 'desc': str = `?sortOrder=desc&limit=5&page=${currentPage}`;
+            }
+        }
+        let doc = document.getElementsByTagName('body')[0];
+        $.get('/api/article/' + str, (data) => {
+            var articles = JSON.parse(data);
+            pages = articles.meta.pages;
             $('#articles').empty();
-            maxPages = data.meta.pages;
-            data.items.forEach(function (element) {
-                $('#articles').append("<h3>" + element.title + "</h3><h5>" + element.date + "</h5>");
+            articles.items.forEach((element) => {
+                $('#articles').append(`<div id='article'>` +
+                    `<div class='date'>   ${element.date}  </div>` +
+                    `<div class='title'>  ${element.title} </div>` +
+                    `<div class='text'>'  ${element.text}  </div>` +
+                    `<div class='author'>'${element.author} </div>` +
+                    `</div><br />`);
             }, this);
-        },
-        'json');
-}
+        });
+    }
+    function nextPage() {
+        currentPage = currentPage + 1;
+        if(currentPage > pages) {
+            currentPage = pages;
+        }
+        getElements();
+    }
 
-function nextPage() {
-    pageNumber = pageNumber + 1;
-    getArticles();
-}
-
-function prevPage() {
-    pageNumber = pageNumber - 1;
-    getArticles();
-}
+    function prevPage() {
+        currentPage = currentPage - 1;
+        if(currentPage < 0){
+            currentPage = 0;
+        }
+        getElements();
+    }

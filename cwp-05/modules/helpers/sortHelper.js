@@ -11,15 +11,18 @@ function dynamicSort (property) {
 }
 
 module.exports.Sort = function (property, sortMode) {
+    let sortOrder;
     switch (sortMode) {
         case 'ask':
-            return dynamicSort(property);
+            sortOrder = dynamicSort(property);
             break;
         case 'desc':
-            return dynamicSort("-" + property);
+            sortOrder = dynamicSort("-" + property);
             break;
         default:
-            return dynamicSort(property);
+            sortOrder = dynamicSort(property);
             break;
+        
     }
+    return sortOrder;
 }
