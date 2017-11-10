@@ -3,11 +3,10 @@ const fs = require('fs');
 const urlHelper = require('url');
 
 const constants = require('./modules/constants_module');
-const ArticleController = require('./constollers/articleController');
+const WorkerController = require('./constollers/workerController');
 const RootMechanism = require('./constollers/rootMechanism');
-const staticHelper = require('./modules/helpers/staticHelper');
 
-let controllers = [new ArticleController(),];
+let controllers = [new WorkerController(),];
 let rootMechanism = new RootMechanism(controllers);
 
 http.createServer(function (request, response) {
@@ -48,10 +47,6 @@ function processRequest(url, requestType, queryObject, response) {
         response.write(JSON.stringify(responseData));
     }
     else {
-        if(url.startsWith(constants.publicUrl)) {
-            staticHelper.getStaticFile(url.split(constants.publicUrl)[1], response);
-            return;
-        }
         response.statusCode = '404';
         response.write('404 not found');
     }
