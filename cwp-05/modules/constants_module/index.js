@@ -19,4 +19,5 @@ module.exports = {
     baseUrl: urls.baseUrl,
     publicUrl: urls.publicUrl,
     articleControllerUrl: urls.articleControllerUrl,
+    workerControllerUrl: urls.workerControllerUrl
 }
