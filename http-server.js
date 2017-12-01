@@ -1,6 +1,3 @@
-/**
- * Created by Anna on 23.10.2017.
- */
 const http = require('http');
 const net = require('net');
 const fs = require('fs');
@@ -10,7 +7,7 @@ const port = 4000;
 const tcp = 5000;
 
 const handlers = {
-    '/workers': getWorkers,
+    '/workers/': getWorkers,
     '/workers/add': addWorker,
     '/workers/remove': removeWorker
 };

@@ -1,12 +1,8 @@
-/**
- * Created by Anna on 23.10.2017.
- */
 const fs = require('fs');
 
 let path = process.argv[2];
 let interval = process.argv[3] * 1000;
 let numbers = [];
-
 if (!fs.existsSync(path)) {
     fs.writeFile(path, '[]', (err) => {
         if (err) console.error(err);

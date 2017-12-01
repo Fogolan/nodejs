@@ -1,6 +1,3 @@
-/**
- * Created by Anna on 23.10.2017.
- */
 const { exec } = require('child_process');
 const cp = require("child_process");
 const fs = require('fs');
@@ -60,21 +57,27 @@ function addWorker(client, data) {
 }
 
 function getWorkers(client, data) {
-
     let list = [];
+    if(workers.length === 0) {
+        client.write(JSON.stringify("There is no workers"));
+    }
     for (let i in workers) {
         fs.readFile(workers[i].path, (err, num) => {
-            list.push({ id: workers[i].id, startedOn: workers[i].startedOn, numbers: JSON.parse(num) });
+            list.push({ id: workers[i].id, startedOn: workers[i].startedOn, numbers: getNumbers(num) });
             if (list.length === workers.length) {
                 client.write(JSON.stringify(list));
             }
         });
 
     }
-
 }
 
-
+function getNumbers(numbers) {
+    if(numbers.length === 0) {
+        return "[]";
+    }
+    return JSON.parse(numbers);
+}
 
 function removeWorker(client, data) {
     for (let i in workers) {
