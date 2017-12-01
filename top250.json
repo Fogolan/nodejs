@@ -1,0 +1,102 @@
+[
+	{
+		"id": 1,
+		"title": "Иван Васильевич меняет профессию",
+		"rating": "8.787",
+		"year": 1973,
+		"budget": 0,
+		"gross": 0,
+		"poster": "https://www.kinopoisk.ru/images/film_big/42664.jpg",
+		"position": 1
+	},
+	{
+		"id": 2,
+		"title": "Жизнь прекрасна",
+		"rating": "8.626",
+		"year": 1997,
+		"budget": 20000000,
+		"gross": 229163264,
+		"poster": "https://www.kinopoisk.ru/images/film_big/381.jpg",
+		"position": 2
+	},
+	{
+		"id": 3,
+		"title": "Крестный отец",
+		"rating": "8.737",
+		"year": 1972,
+		"budget": 6000000,
+		"gross": 245066411,
+		"poster": "https://www.kinopoisk.ru/images/film_big/325.jpg",
+		"position": 3
+	},
+	{
+		"id": 4,
+		"title": "Игры Разума",
+		"rating": "8.560",
+		"year": 2001,
+		"budget": 58000000,
+		"gross": 313542341,
+		"poster": "https://www.kinopoisk.ru/images/film_big/530.jpg",
+		"position": 4
+	},
+	{
+		"id": 5,
+		"title": "Престиж",
+		"rating": "8.527",
+		"year": 2006,
+		"budget": 40000000,
+		"gross": 109676311,
+		"poster": "https://www.kinopoisk.ru/images/film_big/195334.jpg",
+		"position": 5
+	},
+	{
+		"id": 6,
+		"title": "Криминальное чтиво",
+		"rating": "8.622",
+		"year": 1994,
+		"budget": 8000000,
+		"gross": 213928762,
+		"poster": "https://www.kinopoisk.ru/images/film_big/342.jpg",
+		"position": 6
+	},
+	{
+		"id": 7,
+		"title": "Операция Ы и другие приключения Шурика",
+		"rating": "8.717",
+		"year": 1965,
+		"budget": 0,
+		"gross": 0,
+		"poster": "https://www.kinopoisk.ru/images/film_big/42782.jpg",
+		"position": 7
+	},
+	{
+		"id": 8,
+		"title": "Интерстеллар",
+		"rating": "8.583",
+		"year": 2014,
+		"budget": 165000000,
+		"gross": 675120017,
+		"poster": "https://www.kinopoisk.ru/images/film_big/258687.jpg",
+		"position": 8
+	},
+	{
+		"id": 9,
+		"title": "Властелин колец: Возвращение Короля",
+		"rating": "8.612",
+		"year": 2003,
+		"budget": 94000000,
+		"gross": 1119110941,
+		"poster": "https://www.kinopoisk.ru/images/film_big/3498.jpg",
+		"position": 9
+	},
+	{
+		"id": 10,
+		"title": "Гладиатор",
+		"rating": "8.592",
+		"year": 2000,
+		"budget": 10300000,
+		"gross": 457640427,
+		"poster": "https://www.kinopoisk.ru/images/film_big/474.jpg",
+		"position": 10
+	}
+]
