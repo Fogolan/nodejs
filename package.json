@@ -1,6 +1,6 @@
 {
   "name": "cwp-09",
-  "author": "Igor Gordeev",
+  "author": "Yura Bogdan",
   "dependencies": {
     "axios": "^0.17.0",
     "bluebird": "^3.5.1"
