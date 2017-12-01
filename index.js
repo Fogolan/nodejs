@@ -32,6 +32,7 @@ app.get('/api/films/read', (req, res) => {
     if (films[i].id == filmId)
       res.send(films[i]);
 }
+res.send("not found");
 });
 
 app.post('/api/films/create', (req, res) => {
@@ -54,7 +55,7 @@ app.post('/api/films/create', (req, res) => {
     res.send(films);
   }
   else
-    console.error('Проверьте валидность полей!');
+  res.send("ivalid data");
 })
 })
 
